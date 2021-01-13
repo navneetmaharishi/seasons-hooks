@@ -1,17 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import SeasonDisplay from './SeasonDisplay';
+import Loader from './Loader';
+import Error from './Error';
+import useLocation from './useLocation';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const App = () => {
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    const [lat, errorMsg] = useLocation();
+
+    let content;
+    if (errorMsg) {
+        content = <Error msg={errorMsg} />;
+    } else if (lat) {
+        content = <SeasonDisplay lat={lat} />;
+    } else {
+        content = <Loader msg='Please accept location request' />;
+    }
+
+    return <div className="border red">{content}</div>
+};
+
+ReactDOM.render(<App />, document.querySelector('#root'));
